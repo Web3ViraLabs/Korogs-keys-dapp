@@ -1,6 +1,8 @@
 "use client";
 
 import ConnectWallet from "@/components/login-modal";
+import NftDisplayModal from "@/components/nft-modal";
+import NftDisplay from "@/components/nft-modal";
 import { useEffect, useState } from "react";
 
 export const ModalProvider = () => {
@@ -16,6 +18,7 @@ export const ModalProvider = () => {
 
   return (
     <>
+      <NftDisplayModal />
       <ConnectWallet />
     </>
   );

@@ -1,19 +1,21 @@
 "use client";
 
 import { Dialog, Transition } from "@headlessui/react";
-import { WalletMenu } from "./ethereum/wallet";
 import { useModal } from "@/hooks/use-store";
 import { X } from "lucide-react";
 import Image from "next/image";
+import NftDisplay from "./nft-display/nft-display";
 import { Fragment } from "react";
 
-export default function ConnectWallet() {
-  const isOpen = useModal((state) => state.isOpen && state.type === "login");
+export default function NftDisplayModal() {
+  const isOpen = useModal(
+    (state) => state.isOpen && state.type === "nftDisplay"
+  );
   const onClose = useModal((state) => state.onClose);
 
   return (
     <Transition.Root show={isOpen} as={Fragment}>
-      <Dialog open={isOpen} onClose={onClose} className="relative z-[2000]">
+      <Dialog open={isOpen} onClose={() => {}} className="relative z-[2000]">
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-200"
@@ -28,7 +30,7 @@ export default function ConnectWallet() {
             aria-hidden="true"
           />
         </Transition.Child>
-        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+        <div className="fixed inset-0 flex w-screen items-center justify-center lg:p-4 overflow-y-auto">
           <Transition.Child
             as={Fragment}
             enter="transition-transform duration-200 ease-out"
@@ -38,12 +40,10 @@ export default function ConnectWallet() {
             leaveFrom="scale-100"
             leaveTo="scale-0"
           >
-            <Dialog.Panel className="mx-auto rounded bg-[#171C21] backdrop-blur-sm relative flex flex-col py-10">
-              <div className="w-full h-full bg-[url(/gradient-mesh-mint.png)] bg-cover bg-no-repeat p-11 pb-12 relative overflow-hidden">
-                <div className="text-center">
-                  <h2 className="text-lg font-bold uppercase">
-                    Connect Wallet
-                  </h2>
+            <Dialog.Panel className="min-w-[300px] mx-auto rounded bg-[#171C21] backdrop-blur-sm relative flex flex-col sm:max-w-md md:max-w-lg lg:max-w-3xl transition-all duration-300">
+              <div className="bg-[url(/gradient-mesh-mint.png)] bg-cover bg-no-repeat p-2 lg:p-11 relative overflow-hidden transition-all duration-300">
+                <div className="text-center pb-10 p-4">
+                  <h2 className="text-lg font-bold uppercase">Minted NFTs</h2>
                   <button
                     className="bg-transparent border-none outline-none h-[45px] w-[45px] absolute right-0 top-0 overflow-hidden"
                     onClick={onClose}
@@ -51,15 +51,7 @@ export default function ConnectWallet() {
                     <X className="w-6 h-6" />
                   </button>
                 </div>
-                <div className="text-center space-y-8">
-                  <p className="text-zinc-400 text-sm">
-                    Please select a wallet to connect for start minting
-                  </p>
-                  <WalletMenu chainId={11155111} />
-                  <h6 className="text-xs text-zinc-400">
-                    By connecting your wallet, you agree to our terms
-                  </h6>
-                </div>
+                <NftDisplay onClose={onClose} />
                 <div>
                   <div className="absolute bottom-2 left-2">
                     <div className="relative w-3 h-3 -rotate-90">

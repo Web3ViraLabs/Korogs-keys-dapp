@@ -1,8 +1,10 @@
 import { create } from "zustand";
 
-export type ModalType = "login";
+export type ModalType = "login" | "nftDisplay";
 
-type ModalData = {};
+type ModalData = {
+  hash?: string;
+};
 
 interface ModalStore {
   type: ModalType | null;
@@ -14,8 +16,8 @@ interface ModalStore {
 
 export const useModal = create<ModalStore>((set) => ({
   type: null,
-  data: {},
+  data: { hash: "" },
   isOpen: false,
-  onOpen: (type, data = {}) => set({ type, isOpen: true, data }),
+  onOpen: (type, data = { hash: "" }) => set({ type, isOpen: true, data }),
   onClose: () => set({ type: null, isOpen: false }),
 }));

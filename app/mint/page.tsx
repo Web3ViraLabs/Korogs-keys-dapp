@@ -1,8 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import ConnectBtn from "./components/connect-btn";
 import User from "./components/user";
-import MintNft from "./components/mint-nft-btn";
 import FormNft from "./components/form";
 
 const MintPage = () => {

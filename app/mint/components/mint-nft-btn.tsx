@@ -9,6 +9,7 @@ import { Loader2 } from "lucide-react";
 import { CONTRACT_ADDRESS, PRIVILAGED_WALLET } from "@/config/global";
 import { cn } from "@/lib/utils";
 import { isUserEligible } from "../actions/actions";
+import { useTransaction } from "wagmi";
 
 const MintNft = ({ quantity }: { quantity: number }) => {
   const { isConnected, address } = useAccount();
@@ -30,28 +31,34 @@ const MintNft = ({ quantity }: { quantity: number }) => {
         }
       }
     } catch (error) {
+      console.log(error);
     } finally {
       setLoading(false);
     }
   }, [address]);
 
-  const onClick = () => {
-    writeContract(
-      {
-        address: CONTRACT_ADDRESS,
-        abi: abi,
-        functionName: "mint",
-        args: [BigInt(quantity)],
-      },
-      {
-        onSuccess: (data) => {
-          console.log(data);
+  const onClick = async () => {
+    try {
+      writeContract(
+        {
+          address: CONTRACT_ADDRESS,
+          abi: abi,
+          functionName: "mint",
+          args: [BigInt(quantity)],
         },
-        onError: (error) => {
-          console.log(error);
-        },
-      }
-    );
+        {
+          onSuccess: (data) => {
+            console.log(data);
+            onOpen("nftDisplay", { hash: data });
+          },
+          onError: (error) => {
+            console.log(error);
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (loading) {
@@ -113,6 +120,27 @@ const MintNft = ({ quantity }: { quantity: number }) => {
     );
   }
 
+  if (isSuccess) {
+    return (
+      <div className="w-full py-4 bg-[#00FFA3] text-black uppercase font-normal flex gap-x-2 inset-0 items-center justify-around ">
+        <p className="font-bold text-black break-words whitespace-pre-line px-2">
+          Minted
+        </p>
+        {PRIVILAGED_WALLET === address && (
+          <button onClick={() => onClick()} className="border-l px-4 ">
+            <AiOutlineReload
+              className={cn(
+                "hover:transform hover:rotate-90 transition-transform duration-300",
+                isPending && "animate-spin"
+              )}
+              size={20}
+            />
+          </button>
+        )}
+      </div>
+    );
+  }
+
   return (
     <button
       disabled={isPending}
@@ -126,9 +154,6 @@ const MintNft = ({ quantity }: { quantity: number }) => {
       {!isPending &&
         !isSuccess &&
         `Mint ${quantity} NFT${quantity > 1 ? "s" : ""}`}
-      {!isPending &&
-        isSuccess &&
-        `Successfully Minted ${quantity} NFT${quantity > 1 ? "s" : ""}`}
     </button>
   );
 };

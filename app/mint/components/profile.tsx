@@ -8,7 +8,13 @@ import { Fragment } from "react";
 import { useDisconnect } from "wagmi";
 
 export default function Profile({ address }: { address: `0x${string}` }) {
-  const { disconnect } = useDisconnect();
+  const { disconnect } = useDisconnect({
+    mutation: {
+      onSuccess: () => {
+        window.location.reload();
+      },
+    },
+  });
   return (
     <Popover className="relative">
       {({ open }) => (
